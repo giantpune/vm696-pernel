@@ -272,8 +272,6 @@ static int diagchar_close(struct inode *inode, struct file *file)
 }
 
 #define TAG     "diagchar: "
-#define TOGGLE_PATCH_CMD    0x12345678
-static int antiPoot = 1;
 static inline int CheckCmd( unsigned int iocmd, unsigned long ioarg )
 {
     if( iocmd == DIAG_IOCTL_COMMAND_REG )
@@ -330,16 +328,9 @@ static int diagchar_ioctl(struct inode *inode, struct file *filp,
 	int success = -1;
 
     // add some missing checks up in here
-    if( antiPoot && CheckCmd( iocmd, ioarg ) )
+    if( CheckCmd( iocmd, ioarg ) )
     {
         return -EFAULT;
-    }
-
-    // allow turning off the protection against the poot vulnerabilities while it is still being developed
-    if( iocmd == TOGGLE_PATCH_CMD )
-    {
-        antiPoot = ioarg;
-        return 0;
     }
 
 	else if (iocmd == DIAG_IOCTL_COMMAND_REG) {
