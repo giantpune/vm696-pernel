@@ -1732,6 +1732,14 @@ static long kgsl_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
 
 	if (nr < ARRAY_SIZE(kgsl_ioctl_funcs) &&
 	    kgsl_ioctl_funcs[nr].func != NULL) {
+
+        // add missing check that exposes a bunch of DoS attacks
+        if( kgsl_ioctl_funcs[nr].cmd != cmd )
+        {
+            ret = -EFAULT;
+            goto done;
+        }
+
 		func = kgsl_ioctl_funcs[nr].func;
 		lock = kgsl_ioctl_funcs[nr].lock;
 	} else {
