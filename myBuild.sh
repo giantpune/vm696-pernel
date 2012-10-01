@@ -22,19 +22,19 @@ CC1=${KERNEL_SDK}/linux-x86/toolchain/arm-eabi-4.4.3/prebuilt/linux-x86/libexec/
 export PATH=${KS}:${CC}:${CC1}:$PATH
 export TARGET_PRODUCT=m3s_virgin_us
 
-#mkdir -p out
-#make lge_m3s-perf_defconfig ARCH=arm CROSS_COMPILE=${CC}/arm-eabi- O=out -j2
-#if [ "$?" -ne "0" ]; then
-#  echo "make defconfig failed"
-#  exit 1
-#fi
+mkdir -p out
+make lge_m3s-perf_defconfig ARCH=arm CROSS_COMPILE=${CC}/arm-eabi- O=out -j2
+if [ "$?" -ne "0" ]; then
+  echo "make defconfig failed"
+  exit 1
+fi
 
 # build it
-#make ARCH=arm CROSS_COMPILE=${CC}/arm-eabi- O=out -j2
-#if [ "$?" -ne "0" ]; then
-#  echo "Build failed"
-#  exit 1
-#fi
+make ARCH=arm CROSS_COMPILE=${CC}/arm-eabi- O=out -j2
+if [ "$?" -ne "0" ]; then
+  echo "Build failed"
+  exit 1
+fi
 
 # check for abootimg
 if [ -z `which abootimg` ]; then
@@ -86,3 +86,4 @@ rm -rf "${TMP_DIR}"
 
 # done
 echo "Installable zip created: "${ZIP_OUT}
+md5sum "${ZIP_OUT}" ${IMG_OUT}
