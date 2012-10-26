@@ -30,7 +30,7 @@ if [ "$?" -ne "0" ]; then
 fi
 
 # build it
-make ARCH=arm CROSS_COMPILE=${CC}/arm-eabi- O=out -j2
+make ARCH=arm CROSS_COMPILE="ccache ${CC}/arm-eabi-" O=out -j4
 if [ "$?" -ne "0" ]; then
   echo "Build failed"
   exit 1
@@ -61,7 +61,7 @@ mkdir -p "${TMP_DIR}/META-INF/com/google/android"
 
 # write update-script 
 cat << EOF > "${TMP_DIR}/META-INF/com/google/android/updater-script"
-assert( getprop("ro.product.device") == "m3s_virgin_us" );
+assert( getprop("ro.product.device") == "m3s_virgin_us" || getprop("ro.product.name") == "m3s_virgin_us" );
 ui_print("");
 ui_print( "Installing `date +%m/%d/%Y_%H:%M` custom giantpune boot.img ..." );
 show_progress(1.0,0);
@@ -76,7 +76,7 @@ ln -s "${ORIG_DIR}/${IMG_OUT}" "${TMP_DIR}/${IMG_OUT}" || exit 1
 ln -s "${ORIG_DIR}/update-binary" "${TMP_DIR}/META-INF/com/google/android/update-binary" || exit 1
 
 # zip it up
-ZIP_OUT="lgoe_pernel_"`date +%m_%d_%H_%M`".zip"
+ZIP_OUT="lgoe_pernel_[VM]_"`date +%m_%d_%H_%M`".zip"
 cd "${TMP_DIR}"
 zip -0 -r "${ORIG_DIR}/${ZIP_OUT}" *
 cd "${ORIG_DIR}"
