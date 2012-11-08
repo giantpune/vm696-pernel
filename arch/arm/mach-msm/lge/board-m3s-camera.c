@@ -216,12 +216,17 @@ void config_camera_off_gpios(void)
 
 #ifdef CONFIG_S5K4E1
 	static struct platform_device msm_camera_sensor_s5k4e1;
-#elif CONFIG_MT9P017
+#elif defined(CONFIG_MT9P017)
 	static struct platform_device msm_camera_sensor_mt9p017;
 #endif
 
 int main_camera_power_off (void)
 {
+    struct vreg *vreg_cam_dvdd_1_8v;
+	struct vreg *vreg_cam_iovdd_1_8v;
+	struct vreg *vreg_cam_avdd_2_8v;
+	struct vreg *vreg_cam_af_2_8v;
+
 	printk(KERN_ERR "%s: main_camera_power_off \n",__func__);
 
 	//[LGE_UPDATE_S] jeonghoon.cho@lge.com 2011.06.22
@@ -247,11 +252,6 @@ int main_camera_power_off (void)
 
 	mdelay(1);
 
-	struct vreg *vreg_cam_dvdd_1_8v;
-	struct vreg *vreg_cam_iovdd_1_8v;
-	struct vreg *vreg_cam_avdd_2_8v;
-	struct vreg *vreg_cam_af_2_8v;
-
 	vreg_cam_af_2_8v = vreg_get(NULL, "gp6");
 	vreg_disable(vreg_cam_af_2_8v);
 
@@ -273,6 +273,13 @@ int main_camera_power_off (void)
 
 int main_camera_power_on (void)
 {
+    int rc;
+
+	struct vreg *vreg_cam_dvdd_1_8v;
+	struct vreg *vreg_cam_iovdd_1_8v;
+	struct vreg *vreg_cam_avdd_2_8v;
+	struct vreg *vreg_cam_af_2_8v;
+
 	printk(KERN_ERR "%s: main_camera_power_on \n",__func__);
 
 	//[LGE_UPDATE_S] jeonghoon.cho@lge.com 2011.06.22
@@ -287,13 +294,6 @@ int main_camera_power_on (void)
 
 	gpio_set_value(CAM_MAIN_GPIO_RESET_N, 0);
 	mdelay(10);
-
-	int rc;
-
-	struct vreg *vreg_cam_dvdd_1_8v;
-	struct vreg *vreg_cam_iovdd_1_8v;
-	struct vreg *vreg_cam_avdd_2_8v;
-	struct vreg *vreg_cam_af_2_8v;
 
 	vreg_cam_dvdd_1_8v = vreg_get(NULL, "gp13");
 	rc = vreg_set_level(vreg_cam_dvdd_1_8v, 1800);

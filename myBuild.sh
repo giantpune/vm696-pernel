@@ -30,7 +30,7 @@ if [ "$?" -ne "0" ]; then
 fi
 
 # build it
-make ARCH=arm CROSS_COMPILE="ccache ${CC}/arm-eabi-" O=out -j4
+make ARCH=arm CROSS_COMPILE="${CC}/arm-eabi-" O=out -j4
 if [ "$?" -ne "0" ]; then
   echo "Build failed"
   exit 1
